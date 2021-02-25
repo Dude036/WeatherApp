@@ -1,11 +1,11 @@
 package com.dude36.weatherapp
 
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-class City(var icon: Image, var cityName: String, var cityTempF: Float, var cityTempC: Float)
+class City(var icon: ImageView?, var cityName: String?, var cityTempF: Double?, var cityTempC: Double?)
 
 class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         RecyclerView = findViewById<RecyclerView>(R.id.Recycler)
 
         // Add Hard Coded cities
+        cityList?.add(City(null, "San Francisco", 0.0, 0.0))
 
         // Send for Data
 
