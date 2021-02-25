@@ -11,6 +11,13 @@ class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
     internal var cityList: MutableList<City>? = null
 
+    private fun urlifyCity(city: String) : String {
+        var newCity = city.trim()
+        val re = Regex(" ")
+        newCity = re.replace(newCity, "%20")
+        return newCity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
