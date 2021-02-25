@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         // Add Hard Coded cities
         cityList = ArrayList<City>()
         cityList?.add(City(null, "San Francisco", 10.0, -10.0))
+        cityList?.add(City(null, "New York City", 10.0, -10.0))
+        cityList?.add(City(null, "Salt Lake City", 10.0, -10.0))
 
         // Send for Data
 
