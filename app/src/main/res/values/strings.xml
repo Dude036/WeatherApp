@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="icon_description">Shows the current weather icon</string>
+    <string name="sample_text">Sample City Name</string>
+    <string name="sample_temp_f">100 F°</string>
+    <string name="sample_temp_c">-100 C°</string>
+</resources>
