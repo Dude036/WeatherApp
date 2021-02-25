@@ -9,6 +9,7 @@ class City(var icon: Image, var cityName: String, var cityTempF: Float, var city
 
 class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
+    internal var cityList: MutableList<City>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         // Send for Data
 
-        // New City Functionality to be added here (empty cardView Object
+        // New City Functionality to be added here (empty cardView Object)
     }
 }
