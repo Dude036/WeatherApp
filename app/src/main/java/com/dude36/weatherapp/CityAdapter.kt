@@ -14,7 +14,7 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return cityList.size
     }
 
 }
