@@ -19,7 +19,7 @@ class City(
     var cityTempC: Double?
 ) {
     override fun toString(): String {
-        return "$cityName currently at $cityTempF F or  $cityTempC C"
+        return "$cityName currently at $cityTempF F or $cityTempC C"
     }
 }
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
      * @param city: String      City name to create URL safe name
      * @return String           URL Safe city Name
      */
-    private fun urlifyCity(city: String) : String {
+    fun urlifyCity(city: String) : String {
         var newCity = city.trim()
         val re = Regex(" ")
         newCity = re.replace(newCity, "%20")

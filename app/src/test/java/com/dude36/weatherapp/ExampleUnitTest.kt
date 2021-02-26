@@ -14,24 +14,24 @@ import java.nio.file.Paths
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-//    @Test
-//    fun UrlifyTest() {
-//        MainActivity.urlifyCity()
-//    }
+    @Test
+    fun urlifyTest() {
+        val main = MainActivity()
+        assertEquals(main.urlifyCity("   A  "), "A")
+        assertEquals(main.urlifyCity("   A B  "), "A%20B")
+    }
 
     @Test
-    fun checkIconDownload() {
+    fun cityTest() {
         val main = MainActivity()
-        var tempCity = City(null, null, null, null)
-        main.getIcon(tempCity, "10d")
+        main.cityList = ArrayList<City>()
+        (main.cityList as ArrayList<City>).add(City(null, "Salt Lake City", null, null))
 
-        val path = Paths.get("").toAbsolutePath().toString() + "/src/main/res/drawable/image.png"
-        val fileTest = File(path)
-        assertTrue(fileTest.exists())
+        main.updateCityData()
 
-        val image: Bitmap = BitmapFactory.decodeFile(fileTest.absolutePath)
-        while (tempCity.icon === null) {
-            Thread.sleep(1000)
-        }
+        Thread.sleep(1000)
+
+        assertNotNull((main.cityList as ArrayList<City>)[0].cityTempF)
+        assertNotNull((main.cityList as ArrayList<City>)[0].cityTempC)
     }
 }
