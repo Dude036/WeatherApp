@@ -24,8 +24,8 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
     override fun onBindViewHolder(holder: CityCard, position: Int) {
         // Update Data
         holder.cityName.text = cityList[position].cityName
-        holder.cityTempF.text = cityList[position].cityTempF.toString()
-        holder.cityTempC.text = cityList[position].cityTempC.toString()
+        holder.cityTempF.text = cityList[position].cityTempF.toString().format("%.2f") + " F°"
+        holder.cityTempC.text = cityList[position].cityTempC.toString().format("%.2f") + " C°"
 
         // Set OnClickListener
         holder.layout.setOnClickListener {

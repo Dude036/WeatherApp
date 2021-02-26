@@ -10,13 +10,18 @@ import java.io.BufferedInputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
+import kotlin.math.round
 
 class City(
     var icon: ImageView?,
     var cityName: String?,
     var cityTempF: Double?,
     var cityTempC: Double?
-)
+) {
+    override fun toString(): String {
+        return "$cityName currently at $cityTempF F or  $cityTempC C"
+    }
+}
 
 /**Gson Fillable information
  * @param coord: Map<String, Double>        Coordinates
@@ -108,8 +113,15 @@ class MainActivity : AppCompatActivity() {
             val inData = gson.fromJson<OpenWeatherMapData>(fullString, OpenWeatherMapData::class.java)
 
             // Update City info
+            city.cityTempC = inData.main["temp"]?.let { KtoC(it) }
+            city.cityTempF = inData.main["temp"]?.let { KtoF(it) }
+            println(city)
         } finally {
             urlConnection.disconnect()
+
+            // Notify Adapter
+            // TODO (Josh): Can't update unless in main thread. Workaround?
+            // cityAdapter?.notifyDataSetChanged()
         }
     }
 
