@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import java.io.BufferedInputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -16,6 +17,39 @@ class City(
     var cityTempF: Double?,
     var cityTempC: Double?
 )
+
+/**Gson Fillable information
+ * @param coord: Map<String, Double>        Coordinates
+ * @param weather: List<Weather>            List of Weather Data
+ * @param main: Map<String, Double>         Temp Data
+ */
+class OpenWeatherMapData(
+    val coord: Map<String, Double>,
+    val weather: List<Weather>,
+    val main: Map<String, Double>
+) {
+    override fun toString(): String {
+        return "$coord $weather $main"
+    }
+}
+
+/**Data helpers for OpenWeatherMapData
+ * @param id: int                           Identifier
+ * @param main: STring                      Sky Type
+ * @param description: String               Simple Description
+ * @param icon: string                      Icon Identifier
+ */
+class Weather(
+    val id: Int,
+    val main: String,
+    val description: String,
+    val icon: String,
+) {
+    override fun toString(): String {
+        return "$id $main $description $icon"
+    }
+}
+
 
 class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
@@ -62,7 +96,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Send to Parser
-            println(fullString)
+            val gson = Gson()
+            val inData = gson.fromJson<OpenWeatherMapData>(fullString, OpenWeatherMapData::class.java)
 
             // Update City info
         } finally {
