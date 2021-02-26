@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.toolbox.Volley
 
 class City(var icon: ImageView?, var cityName: String?, var cityTempF: Double?, var cityTempC: Double?)
 
@@ -19,6 +18,17 @@ class MainActivity : AppCompatActivity() {
         val re = Regex(" ")
         newCity = re.replace(newCity, "%20")
         return newCity
+    }
+
+    fun updateCityData() {
+        for (city in cityList!!) {
+            updateCity(city)
+        }
+    }
+
+    private fun updateCity(city: City) {
+        val url = "api.openweathermap.org/data/2.5/weather?q=" + urlifyCity(city.cityName!!) + "&appid=da65fafb6cb9242168b7724fb5ab75e7"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         cityList?.add(City(null, "Salt Lake City", 10.0, -10.0))
 
         // Send for Data
+        updateCityData()
 
         // Add City Data to the Layout
         cityAdapter = CityAdapter(this@MainActivity, cityList!!)
