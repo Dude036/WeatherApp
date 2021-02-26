@@ -22,6 +22,10 @@ class MainActivity : AppCompatActivity() {
     internal var cityList: MutableList<City>? = null
     internal var cityAdapter: CityAdapter? = null
 
+    /**Helper function for updating city data
+     * @param city: String      City name to create URL safe name
+     * @return String           URL Safe city Name
+     */
     private fun urlifyCity(city: String) : String {
         var newCity = city.trim()
         val re = Regex(" ")
@@ -29,7 +33,10 @@ class MainActivity : AppCompatActivity() {
         return newCity
     }
 
+    /**Update all Cities in the main list. This spawns 'n' number of threads where 'n' is the number of cities
+     */
     fun updateCityData() {
+        // Setup threads for all cities in the City List
         for (city in cityList!!) {
             thread(true) {
                 updateCity(city)
@@ -37,18 +44,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**The main legs of the City updates. Handles Network connection to get data for a City Given Name
+     * @param city: City        A City to update information on
+     */
     private fun updateCity(city: City) {
         val url = URL("http://api.openweathermap.org/data/2.5/weather?q=" + urlifyCity(city.cityName!!) + "&appid=da65fafb6cb9242168b7724fb5ab75e7")
         val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
         try {
+            // In thread, Read buffered fytes
             val inStream = BufferedInputStream(urlConnection.inputStream)
             var contents = ByteArray(1024)
             var bytesRead = 0
             var fullString = ""
+            // While there is stuff to be read, dump in to content, and append to full string
             while (`inStream`.read(contents).also { bytesRead = it } !== -1) {
                 fullString += String(contents, 0, bytesRead)
             }
+
+            // Send to Parser
             println(fullString)
+
+            // Update City info
         } finally {
             urlConnection.disconnect()
         }
