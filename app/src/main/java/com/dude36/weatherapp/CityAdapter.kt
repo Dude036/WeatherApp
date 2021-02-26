@@ -24,8 +24,19 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
     override fun onBindViewHolder(holder: CityCard, position: Int) {
         // Update Data
         holder.cityName.text = cityList[position].cityName
-        holder.cityTempF.text = cityList[position].cityTempF.toString().format("%.2f") + " F°"
-        holder.cityTempC.text = cityList[position].cityTempC.toString().format("%.2f") + " C°"
+
+        // Regex works SOO much better than format
+        val reg = Regex("[0-9]+.[0-9]{2}")
+        var matches = reg.find(cityList[position].cityTempF.toString())
+        val fTemp: String = (matches?.groupValues?.get(0) ?: "???") + " F°"
+        holder.cityTempF.text = fTemp
+
+        matches = reg.find(cityList[position].cityTempC.toString())
+        val cTemp = (matches?.groupValues?.get(0) ?: "???") + " C°"
+        holder.cityTempC.text = cTemp
+
+        // Add Icon
+        holder.icon.setImageBitmap(cityList[position].icon)
 
         // Set OnClickListener
         holder.layout.setOnClickListener {
