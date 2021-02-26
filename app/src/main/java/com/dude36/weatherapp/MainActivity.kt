@@ -1,12 +1,21 @@
 package com.dude36.weatherapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.BufferedInputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
 
-class City(var icon: ImageView?, var cityName: String?, var cityTempF: Double?, var cityTempC: Double?)
+class City(
+    var icon: ImageView?,
+    var cityName: String?,
+    var cityTempF: Double?,
+    var cityTempC: Double?
+)
 
 class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
@@ -22,13 +31,27 @@ class MainActivity : AppCompatActivity() {
 
     fun updateCityData() {
         for (city in cityList!!) {
-            updateCity(city)
+            thread(true) {
+                updateCity(city)
+            }
         }
     }
 
     private fun updateCity(city: City) {
-        val url = "api.openweathermap.org/data/2.5/weather?q=" + urlifyCity(city.cityName!!) + "&appid=da65fafb6cb9242168b7724fb5ab75e7"
-
+        val url = URL("http://api.openweathermap.org/data/2.5/weather?q=" + urlifyCity(city.cityName!!) + "&appid=da65fafb6cb9242168b7724fb5ab75e7")
+        val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        try {
+            val inStream = BufferedInputStream(urlConnection.inputStream)
+            var contents = ByteArray(1024)
+            var bytesRead = 0
+            var fullString = ""
+            while (`inStream`.read(contents).also { bytesRead = it } !== -1) {
+                fullString += String(contents, 0, bytesRead)
+            }
+            println(fullString)
+        } finally {
+            urlConnection.disconnect()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
