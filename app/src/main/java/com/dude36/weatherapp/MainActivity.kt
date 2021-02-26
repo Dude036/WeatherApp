@@ -1,7 +1,8 @@
 package com.dude36.weatherapp
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,10 +11,9 @@ import java.io.BufferedInputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.concurrent.thread
-import kotlin.math.round
 
 class City(
-    var icon: ImageView?,
+    var icon: Bitmap?,
     var cityName: String?,
     var cityTempF: Double?,
     var cityTempC: Double?
@@ -116,12 +116,27 @@ class MainActivity : AppCompatActivity() {
             city.cityTempC = inData.main["temp"]?.let { KtoC(it) }
             city.cityTempF = inData.main["temp"]?.let { KtoF(it) }
             println(city)
+
+            // Get Icon
+            getIcon(city, inData.weather[0].icon)
         } finally {
             urlConnection.disconnect()
 
             // Notify Adapter
             // TODO (Josh): Can't update unless in main thread. Workaround?
             // cityAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    fun getIcon(city: City, code: String) {
+        val url = URL("http://openweathermap.org/img/wn/" + code + "@2x.png")
+        val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+        try {
+            // In thread, Read buffered fytes
+            val inStream = BufferedInputStream(urlConnection.inputStream)
+            city.icon = BitmapFactory.decodeStream(inStream)
+        } finally {
+            urlConnection.disconnect()
         }
     }
 
