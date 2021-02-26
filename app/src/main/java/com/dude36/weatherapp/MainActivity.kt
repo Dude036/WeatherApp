@@ -78,6 +78,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**Convert Kelvin to Celsius
+     */
+    private fun KtoC(num: Double) : Double { return num - 273.15 }
+
+    /**Convert Kelvin to Fahrenheit
+     */
+    private fun KtoF(num: Double) : Double { return KtoC(num) * 9 / 5 + 32 }
+
     /**The main legs of the City updates. Handles Network connection to get data for a City Given Name
      * @param city: City        A City to update information on
      */
@@ -112,13 +120,11 @@ class MainActivity : AppCompatActivity() {
         // Setup View
         RecyclerView = findViewById<RecyclerView>(R.id.Recycler)
 
-//        for (cityListName in listOf("San Francisco", "New York City", "Salt Lake City")) {
-//        }
         // Add Hard Coded cities
         cityList = ArrayList<City>()
-        cityList?.add(City(null, "San Francisco", 10.0, -10.0))
-        cityList?.add(City(null, "New York City", 10.0, -10.0))
-        cityList?.add(City(null, "Salt Lake City", 10.0, -10.0))
+        for (cityListName in listOf("San Francisco", "New York City", "Salt Lake City")) {
+            cityList?.add(City(null, cityListName, 10.0, -10.0))
+        }
 
         // Send for Data
         updateCityData()
