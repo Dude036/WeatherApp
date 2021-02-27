@@ -1,23 +1,24 @@
 package com.dude36.weatherapp
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import java.io.BufferedInputStream
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.Serializable
 import kotlin.concurrent.thread
 
 class City(
-    var icon: Bitmap?,
-    var cityName: String?,
+    var icon: String?,
+    var cityName: String,
     var cityTempF: Double?,
-    var cityTempC: Double?
-) {
+    var cityTempC: Double?,
+    var cityHighF: Double?,
+    var cityLowF: Double?,
+    var cityHighC: Double?,
+    var cityLowC: Double?,
+    var cityPrecip: Double?,
+    var complete: Boolean = false
+) : Serializable {
     override fun toString(): String {
         return "$cityName currently at $cityTempF F or $cityTempC C"
     }
@@ -55,88 +56,31 @@ class Weather(
     }
 }
 
+/**Convert Kelvin to Celsius
+ */
+fun KtoC(num: Double) : Double { return num - 273.15 }
+
+/**Convert Kelvin to Fahrenheit
+ */
+fun KtoF(num: Double) : Double { return KtoC(num) * 9 / 5 + 32 }
+
 
 class MainActivity : AppCompatActivity() {
     internal var RecyclerView: RecyclerView? = null
-    internal var cityList: MutableList<City>? = null
+    var cityList: MutableList<City>? = null
     internal var cityAdapter: CityAdapter? = null
-
-    /**Helper function for updating city data
-     * @param city: String      City name to create URL safe name
-     * @return String           URL Safe city Name
-     */
-    fun urlifyCity(city: String) : String {
-        var newCity = city.trim()
-        val re = Regex(" ")
-        newCity = re.replace(newCity, "%20")
-        return newCity
-    }
 
     /**Update all Cities in the main list. This spawns 'n' number of threads where 'n' is the number of cities
      */
     fun updateCityData() {
         // Setup threads for all cities in the City List
-        for (city in cityList!!) {
+        val network = NetworkAdapter()
+        for (i in 0 until cityList!!.size) {
             thread(true) {
-                updateCity(city)
+                cityList!![i] = network.getDailyData(cityList!![i].cityName)!!
+                cityList!![i].cityPrecip = network.getHourlyData(cityList!![i].cityName)
+                cityList!![i].complete = true
             }
-        }
-    }
-
-    /**Convert Kelvin to Celsius
-     */
-    private fun KtoC(num: Double) : Double { return num - 273.15 }
-
-    /**Convert Kelvin to Fahrenheit
-     */
-    private fun KtoF(num: Double) : Double { return KtoC(num) * 9 / 5 + 32 }
-
-    /**The main legs of the City updates. Handles Network connection to get data for a City Given Name
-     * @param city: City        A City to update information on
-     */
-    private fun updateCity(city: City) {
-        val url = URL("http://api.openweathermap.org/data/2.5/weather?q=" + urlifyCity(city.cityName!!) + "&appid=da65fafb6cb9242168b7724fb5ab75e7")
-        val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        try {
-            // In thread, Read buffered fytes
-            val inStream = BufferedInputStream(urlConnection.inputStream)
-            var contents = ByteArray(1024)
-            var bytesRead = 0
-            var fullString = ""
-            // While there is stuff to be read, dump in to content, and append to full string
-            while (`inStream`.read(contents).also { bytesRead = it } !== -1) {
-                fullString += String(contents, 0, bytesRead)
-            }
-
-            // Send to Parser
-            val gson = Gson()
-            val inData = gson.fromJson<OpenWeatherMapData>(fullString, OpenWeatherMapData::class.java)
-
-            // Update City info
-            city.cityTempC = inData.main["temp"]?.let { KtoC(it) }
-            city.cityTempF = inData.main["temp"]?.let { KtoF(it) }
-            println(city)
-
-            // Get Icon
-            getIcon(city, inData.weather[0].icon)
-        } finally {
-            urlConnection.disconnect()
-
-            // Notify Adapter
-            // TODO (Josh): Can't update unless in main thread. Workaround?
-            // cityAdapter?.notifyDataSetChanged()
-        }
-    }
-
-    fun getIcon(city: City, code: String) {
-        val url = URL("http://openweathermap.org/img/wn/" + code + "@2x.png")
-        val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        try {
-            // In thread, Read buffered fytes
-            val inStream = BufferedInputStream(urlConnection.inputStream)
-            city.icon = BitmapFactory.decodeStream(inStream)
-        } finally {
-            urlConnection.disconnect()
         }
     }
 
@@ -150,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         // Add Hard Coded cities
         cityList = ArrayList<City>()
         for (cityListName in listOf("San Francisco", "New York City", "Salt Lake City")) {
-            cityList?.add(City(null, cityListName, 10.0, -10.0))
+            cityList?.add(City(null, cityListName, 10.0, -10.0, null, null, null, null,null, false))
         }
 
         // Send for Data
@@ -161,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         while (ongoing) {
             ongoing = false
             for (city in cityList as ArrayList<City>) {
-                if (city.icon === null) {
+                if (!city.complete) {
                     ongoing = true
                 }
             }

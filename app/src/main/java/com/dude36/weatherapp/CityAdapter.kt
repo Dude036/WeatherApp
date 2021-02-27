@@ -1,10 +1,13 @@
 package com.dude36.weatherapp
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import java.io.Serializable
 
 /**Adapter for Recycler View. This will handle opening fragments, and connects the user to the data.
  *
@@ -36,12 +39,18 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
         holder.cityTempC.text = cTemp
 
         // Add Icon
-        holder.icon.setImageBitmap(cityList[position].icon)
+        val net = NetworkAdapter()
+        holder.icon.setImageBitmap(cityList[position].icon?.let { net.getIcon(it) })
 
         // Set OnClickListener
         holder.layout.setOnClickListener {
             // TODO (Josh): Setup Fragment for Specific City
             Toast.makeText(context, holder.cityName.text as String? + " fragment here", Toast.LENGTH_SHORT).show()
+
+            val newIntent : Intent = Intent(context, SpecificCity::class.java)
+            cityList[position].icon = null
+            newIntent.putExtra("toFill", cityList[position] as Serializable)
+            context.startActivity(newIntent)
         }
     }
 
