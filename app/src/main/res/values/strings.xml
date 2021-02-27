@@ -4,4 +4,10 @@
     <string name="sample_text">Sample City Name</string>
     <string name="sample_temp_f">100 F°</string>
     <string name="sample_temp_c">-100 C°</string>
+    <string name="city_name">City Name:</string>
+    <string name="city_temp">Current Temp:</string>
+    <string name="city_max">High:</string>
+    <string name="city_min">Low:</string>
+    <string name="city_precip">Precipitation %:</string>
+
 </resources>
