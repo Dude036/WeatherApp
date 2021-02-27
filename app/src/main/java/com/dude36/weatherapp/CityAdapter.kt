@@ -2,10 +2,10 @@ package com.dude36.weatherapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import java.io.Serializable
 
@@ -40,7 +40,12 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
 
         // Add Icon
         val net = NetworkAdapter()
-        holder.icon.setImageBitmap(cityList[position].icon?.let { net.getIcon(it) })
+        var bitty: Bitmap? = null
+        bitty = net.getIcon(cityList[position].icon)
+        while (bitty === null) {
+            Thread.sleep(10)
+        }
+        holder.icon.setImageBitmap(bitty)
 
         // Set OnClickListener
         holder.layout.setOnClickListener {

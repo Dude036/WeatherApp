@@ -19,7 +19,7 @@ class NetworkAdapter {
         return newCity
     }
 
-    fun getIcon(code: String) : Bitmap? {
+    fun getIcon(code: String?) : Bitmap? {
         val bitty: Bitmap?
         val url = URL("http://openweathermap.org/img/wn/" + code + "@2x.png")
         val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
@@ -57,8 +57,8 @@ class NetworkAdapter {
             var inData = gson.fromJson<OpenWeatherMapData>(fullString, OpenWeatherMapData::class.java)
 
             // Update City info
+            city.icon = inData.weather[0].icon
             city.cityTempF = inData.main["temp"]?.let { KtoF(it) }
-            city.cityTempC = inData.main["temp"]?.let { KtoC(it) }
             city.cityHighF = inData.main["temp_max"]?.let { KtoF(it) }
             city.cityHighC = inData.main["temp_max"]?.let { KtoC(it) }
             city.cityLowF = inData.main["temp_min"]?.let { KtoF(it) }
