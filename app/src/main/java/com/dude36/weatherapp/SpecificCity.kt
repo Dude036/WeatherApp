@@ -5,6 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class SpecificCity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,12 +22,16 @@ class SpecificCity : AppCompatActivity() {
         val network = NetworkAdapter()
 
         println(city)
-        (city as City).icon?.let { bitmap = network.getIcon(it) }
+        GlobalScope.async {
+            val iconString = (city as City).icon
+            bitmap = network.getIcon(iconString)
+            GlobalScope.launch(Dispatchers.Main) {
+                findViewById<ImageView>(R.id.bigImage).setImageBitmap(bitmap)
+            }
+        }
 
-        Thread.sleep(1000)
         // Icon and Name
-        findViewById<ImageView>(R.id.bigImage).setImageBitmap(bitmap)
-        findViewById<TextView>(R.id.city_name_fill).text = city.cityName
+        findViewById<TextView>(R.id.city_name_fill).text = (city as City).cityName
 
         // Current
         val reg = Regex("[0-9]+.[0-9]{2}")

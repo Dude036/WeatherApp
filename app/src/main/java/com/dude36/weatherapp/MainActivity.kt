@@ -80,6 +80,9 @@ class MainActivity : AppCompatActivity() {
                 cityList!![i] = network.getDailyData(cityList!![i].cityName)!!
                 cityList!![i].cityPrecip = network.getHourlyData(cityList!![i].cityName)
                 cityList!![i].complete = true
+                GlobalScope.launch(Dispatchers.Main) {
+                    cityAdapter?.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -99,17 +102,6 @@ class MainActivity : AppCompatActivity() {
 
         // Send for Data
         updateCityData()
-
-        // Sleep until threads are done?
-        var ongoing = true
-        while (ongoing) {
-            ongoing = false
-            for (city in cityList as ArrayList<City>) {
-                if (!city.complete) {
-                    ongoing = true
-                }
-            }
-        }
 
         // Add City Data to the Layout
         cityAdapter = CityAdapter(this@MainActivity, cityList!!)

@@ -50,9 +50,6 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
 
         // Set OnClickListener
         holder.layout.setOnClickListener {
-            // TODO (Josh): Setup Fragment for Specific City
-            Toast.makeText(context, holder.cityName.text as String? + " fragment here", Toast.LENGTH_SHORT).show()
-
             val newIntent : Intent = Intent(context, SpecificCity::class.java)
             newIntent.putExtra("toFill", cityList[position] as Serializable)
             context.startActivity(newIntent)
