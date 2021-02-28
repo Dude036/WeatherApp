@@ -16,22 +16,34 @@ import java.nio.file.Paths
 class ExampleUnitTest {
     @Test
     fun urlifyTest() {
-        val main = MainActivity()
+        val main = NetworkAdapter()
         assertEquals(main.urlifyCity("   A  "), "A")
         assertEquals(main.urlifyCity("   A B  "), "A%20B")
     }
 
     @Test
     fun cityTest() {
-        val main = MainActivity()
-        main.cityList = ArrayList<City>()
-        (main.cityList as ArrayList<City>).add(City(null, "Salt Lake City", null, null))
-
-        main.updateCityData()
+        val main = NetworkAdapter()
+        val city = main.getDailyData("Salt Lake City")
 
         Thread.sleep(1000)
 
-        assertNotNull((main.cityList as ArrayList<City>)[0].cityTempF)
-        assertNotNull((main.cityList as ArrayList<City>)[0].cityTempC)
+        assertNotNull(city)
+        if (city != null) {
+            assertNotNull(city.cityTempF)
+            assertNotNull(city.cityTempC)
+            assertNotNull(city.cityHighF)
+            assertNotNull(city.cityHighC)
+            assertNotNull(city.cityLowF)
+            assertNotNull(city.cityLowC)
+        }
+
+        assertNotNull(main.getHourlyData("Salt Lake City"))
+    }
+
+    @Test
+    fun pictureTest() {
+        val main = NetworkAdapter()
+        assertNotNull(main.getIcon("10d"))
     }
 }
