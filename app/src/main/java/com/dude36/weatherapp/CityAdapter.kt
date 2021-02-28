@@ -54,7 +54,6 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
             Toast.makeText(context, holder.cityName.text as String? + " fragment here", Toast.LENGTH_SHORT).show()
 
             val newIntent : Intent = Intent(context, SpecificCity::class.java)
-            cityList[position].icon = null
             newIntent.putExtra("toFill", cityList[position] as Serializable)
             context.startActivity(newIntent)
         }
