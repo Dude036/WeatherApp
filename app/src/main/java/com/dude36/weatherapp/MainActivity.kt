@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
 import java.io.Serializable
-import kotlin.concurrent.thread
 
 class City(
     var icon: String?,
@@ -75,8 +75,8 @@ class MainActivity : AppCompatActivity() {
     fun updateCityData() {
         // Setup threads for all cities in the City List
         val network = NetworkAdapter()
-        for (i in 0 until cityList!!.size) {
-            thread(true) {
+        GlobalScope.async {
+            for (i in 0 until cityList!!.size) {
                 cityList!![i] = network.getDailyData(cityList!![i].cityName)!!
                 cityList!![i].cityPrecip = network.getHourlyData(cityList!![i].cityName)
                 cityList!![i].complete = true
