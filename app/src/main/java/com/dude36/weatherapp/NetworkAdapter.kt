@@ -64,8 +64,6 @@ class NetworkAdapter {
             city.cityHighC = inData.main["temp_max"]?.let { KtoC(it) }
             city.cityLowF = inData.main["temp_min"]?.let { KtoF(it) }
             city.cityLowC = inData.main["temp_min"]?.let { KtoC(it) }
-
-            println(city)
         } finally {
             urlConnection.disconnect()
 

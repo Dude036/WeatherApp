@@ -44,6 +44,8 @@ class ExampleUnitTest {
     @Test
     fun pictureTest() {
         val main = NetworkAdapter()
-        assertNotNull(main.getIcon("10d"))
+        var bit: Bitmap? = null
+        bit = main.getIcon("10d")
+        assertNotNull(bit)
     }
 }
