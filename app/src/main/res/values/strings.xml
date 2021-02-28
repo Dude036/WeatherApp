@@ -9,5 +9,5 @@
     <string name="city_max">High:</string>
     <string name="city_min">Low:</string>
     <string name="city_precip">Precipitation %:</string>
-
+    <string name="add_city">Add City</string>
 </resources>

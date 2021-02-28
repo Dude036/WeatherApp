@@ -13,4 +13,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_city"
+        app:layout_constraintBottom_toBottomOf="@+id/Recycler"
+        app:layout_constraintEnd_toEndOf="@+id/Recycler"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:focusable="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
