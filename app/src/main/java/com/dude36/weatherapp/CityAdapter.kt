@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.io.Serializable
 
 /**Adapter for Recycler View. This will handle opening fragments, and connects the user to the data.
@@ -41,11 +43,10 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
         // Add Icon
         val net = NetworkAdapter()
         var bitty: Bitmap? = null
-        bitty = net.getIcon(cityList[position].icon)
-        while (bitty === null) {
-            Thread.sleep(10)
+        GlobalScope.async {
+            bitty = net.getIcon(cityList[position].icon)
+            holder.icon.setImageBitmap(bitty)
         }
-        holder.icon.setImageBitmap(bitty)
 
         // Set OnClickListener
         holder.layout.setOnClickListener {
