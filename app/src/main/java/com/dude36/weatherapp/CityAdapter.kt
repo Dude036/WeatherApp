@@ -54,6 +54,15 @@ class CityAdapter(internal var context: Context, internal var cityList: List<Cit
             newIntent.putExtra("toFill", cityList[position] as Serializable)
             context.startActivity(newIntent)
         }
+
+        holder.layout.setOnLongClickListener {
+            val newList = cityList.toMutableList()
+            newList.removeAt(position)
+            cityList = newList as ArrayList<City>
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, itemCount)
+            true
+        }
     }
 
     override fun getItemCount(): Int {
